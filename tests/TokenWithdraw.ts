@@ -1,23 +1,16 @@
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
 import { TokenWithdraw } from "../target/types/token_withdraw";
-import { PublicKey, SystemProgram, Transaction, Connection, Commitment,LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { PublicKey, SystemProgram, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { Buffer } from "buffer";
 import {
   TOKEN_PROGRAM_ID,
-  MINT_SIZE,
-  createAssociatedTokenAccountInstruction,
   getAssociatedTokenAddress,
   getOrCreateAssociatedTokenAccount,
   createMint,
-  createInitializeMintInstruction,
   mintTo
 } from "@solana/spl-token"; 
-import * as splToken from '@solana/spl-token';
 import { assert } from "chai";
-import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
-import { publicKey } from "@project-serum/anchor/dist/cjs/utils";
-import { min } from "bn.js";
 
 describe("anchor_withraw", async() => {
   // Configure the client to use the local cluster.
@@ -139,6 +132,7 @@ describe("anchor_withraw", async() => {
 
   it("token init" ,async () => {
     /* =========== Spl token test =================== */
+
     mint = await createMint(
       provider.connection,
       sender_account,
@@ -161,15 +155,15 @@ describe("anchor_withraw", async() => {
     console.log("sender ATA", sender_ata.address.toBase58());
 
     //minting 100 new tokens to the token address we just created
+    provider.connection,
+    await mintTo(
       provider.connection,
-      await mintTo(
-        provider.connection,
-        sender_account, 
-        mint, 
-        sender_ata.address,
-        sender_account,
-        Number(token_amount)
-        );
+      sender_account, 
+      mint, 
+      sender_ata.address,
+      sender_account,
+      Number(token_amount)
+      );
 
     let sender_ata_token = await provider.connection.getTokenAccountBalance(sender_ata.address);
     console.log("Total minted token to sender ATA : ", Number(sender_ata_token.value.amount));
