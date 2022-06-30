@@ -49,9 +49,9 @@ describe("anchor_withraw", async() => {
     sender_account.publicKey.toBuffer()
   ],
   program.programId);
-  
-  escrow_account = _escrow_account;
-  token_escrow = _token_escrow_account;
+  escrow_account = _escrow_account;     // pda to store info about native sol
+  token_escrow = _token_escrow_account;  // pda to store info about tokens
+
   let mint = null;
   let vault_ata = null;
   let receiver_ata = null;
@@ -68,6 +68,7 @@ describe("anchor_withraw", async() => {
   console.log("escrow 2", escrow_account);
   
   it("Initiallize Native Sol", async () => {
+    //funding sender account
     await provider.connection.confirmTransaction(
       await provider.connection.requestAirdrop(sender_account.publicKey, 1000000000000),
       "processed"
@@ -104,7 +105,7 @@ describe("anchor_withraw", async() => {
   });
 
   it("Withdraw Native Sol", async () => {
-    //wait 5 sec because acc to sc user cannot withdraw only after 2 sec of `escrow_account.start_time`
+    //wait 3 sec because acc to sc user can withdraw only after 2 sec of `escrow_account.start_time`
     const delay = ms => new Promise(res => setTimeout(res, ms));
     await delay(3000);
 
@@ -238,7 +239,7 @@ describe("anchor_withraw", async() => {
     vault_ata_token_value = await provider.connection.getTokenAccountBalance(await vault_ata);
     console.log("Vault token value after transfer : ", vault_ata_token_value.value.amount);
 
-    console.log(">>>>>>>>>>>>>>>>>>>>>Testing Native Completed<<<<<<<<<<<<<<<<<<");
+    console.log(">>>>>>>>>>>>>>>>>>>>>Testing TOKEN Completed<<<<<<<<<<<<<<<<<<");
 
   });
 })

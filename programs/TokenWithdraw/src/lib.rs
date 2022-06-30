@@ -15,7 +15,6 @@ const FIND_PROGRAM_SEED: &[u8] = b"FIND_PROGRAM";
 
 const TOKEN_ESCROW_PDA_SEED: &[u8] = b"token_escrow_seed";
 
-// const ASSOCIATED_ACCOUNT_SEED: &[u8] = b"token_Aassociated_seed";
 
 #[program]
 pub mod token_withdraw {
@@ -115,15 +114,12 @@ pub mod token_withdraw {
             return Err(error!(ErrorCode::InvalidProgramExecutable));
         }
 
-        // if ctx.accounts.escrow_account.start_time + 2 > Clock::get()?.unix_timestamp as u64{ // 24 hours not passed yet (24*60*60)
-        //     return Err(error!(ErrorCode::InvalidProgramExecutable));
-        // }
+        if ctx.accounts.escrow_account.start_time + 2 > Clock::get()?.unix_timestamp as u64{ // 24 hours not passed yet (24*60*60)
+            return Err(error!(ErrorCode::InvalidProgramExecutable));
+        }
 
         let (_vault_authority, vault_authority_bump) = Pubkey::find_program_address(&[FIND_PROGRAM_SEED], ctx.program_id);
         let pda_signer_seed:&[&[&[_]]] = &[&[&FIND_PROGRAM_SEED, &[vault_authority_bump]]];
-
-        //let inner = vec![b"vault_transfer".as_ref(), ctx.accounts.sender_account.key.as_ref()];
-        // let pda_signer_seed = vec![inner.as_slice()];
         
         let transfer_ix = Token_Transfer{
             from: ctx.accounts.vault_associated_info.to_account_info(),
@@ -183,7 +179,6 @@ pub struct WithdrawNative<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(token_escrow_bump: u8)]
 pub struct InitializeFungibleToken<'info> {
     #[account(
         init,
@@ -219,7 +214,6 @@ pub struct InitializeFungibleToken<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(nonce: u8)]
 pub struct WithdrawFungibleToken<'info> {
     #[account(
         seeds = [TOKEN_ESCROW_PDA_SEED, sender_account.key().as_ref()],
