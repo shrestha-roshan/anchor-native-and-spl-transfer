@@ -20,16 +20,16 @@ describe("anchor_withraw", async() => {
   
   const start_time = Math.floor(Date.now()/1000);
   const amount = (5* LAMPORTS_PER_SOL).toString();
+  const token_amount = (500).toString();
 
   const ESCROW_PDA_SEED = "escrow_seed";
   const TOKEN_ESCROW_PDA_SEED = "token_escrow_seed";
 
-  let escrow_account: PublicKey = null;
-  let token_escrow: PublicKey = null;
-
   const vault = anchor.web3.Keypair.generate();
   const sender_account = anchor.web3.Keypair.generate();
   const receiver_account = anchor.web3.Keypair.generate();
+  let escrow_account: PublicKey = null;
+  let token_escrow: PublicKey = null;
 
   const [_escrow_account, _bump] = await PublicKey.findProgramAddress([
     Buffer.from(anchor.utils.bytes.utf8.encode(ESCROW_PDA_SEED)), 
@@ -50,15 +50,9 @@ describe("anchor_withraw", async() => {
   let receiver_ata = null;
   let sender_ata = null;
 
-  const token_amount = (500).toString();
 
-  const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID: PublicKey = new PublicKey(
-    'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL',
-  );
+  const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID: PublicKey = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL',);
   const SYSTEMRENT = "SysvarRent111111111111111111111111111111111";
-
-
-  console.log("escrow 2", escrow_account);
   
   it("Initiallize Native Sol", async () => {
     //funding sender account

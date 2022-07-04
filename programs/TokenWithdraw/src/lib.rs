@@ -1,7 +1,4 @@
 use anchor_lang::prelude::*;
-// use anchor_lang::solana_program::system_instruction::transfer;
-// use anchor_lang::solana_program::program::{invoke};
-// use anchor_lang::solana_program::system_instruction::{transfer};
 use anchor_lang::system_program::{Transfer, transfer};
 use anchor_spl::{associated_token::AssociatedToken, token::{Mint, Token, TokenAccount, transfer as token_transfer, Transfer as Token_Transfer}};
 
@@ -21,6 +18,7 @@ pub mod token_withdraw {
     use super::*;
 
     pub fn initialize_native_sol(ctx: Context<InitializeNative>, start_time: u64, amount: u64) -> Result<()> {
+        msg!("into initiallize native sol");
         ctx.accounts.escrow_account.sender_account = *ctx.accounts.sender_account.key;
         ctx.accounts.escrow_account.receiver_account = *ctx.accounts.receiver_account.key;
         ctx.accounts.escrow_account.start_time = start_time;
@@ -163,7 +161,7 @@ pub struct InitializeNative<'info> {
 pub struct WithdrawNative<'info> {
     #[account(
         seeds = [ESCROW_PDA_SEED, sender_account.key().as_ref()], 
-        bump
+        bump,
     )]
     pub escrow_account: Account<'info, EscrowNative>,
     /// CHECK: This is not dangerous because we don't read or write from this account
@@ -196,8 +194,7 @@ pub struct InitializeFungibleToken<'info> {
         payer = sender_account,
         associated_token::mint = mint,
         associated_token::authority = vault,
-        )
-    ]
+    )]
     pub vault_associated_info: Account<'info, TokenAccount>,
     /// CHECK: This is not dangerous because we don't read or write from this account
     #[account(mut)]
@@ -220,11 +217,9 @@ pub struct WithdrawFungibleToken<'info> {
         bump 
         )
     ]
-    pub escrow_account: Box<Account<'info, EscrowFungibleToken>>,
+    pub escrow_account: Account<'info, EscrowFungibleToken>,
     #[account(
         init,
-        // seeds = [ASSOCIATED_ACCOUNT_SEED],
-        // bump,
         payer = receiver_account,
         associated_token::mint = mint,
         associated_token::authority = receiver_account,
@@ -232,8 +227,6 @@ pub struct WithdrawFungibleToken<'info> {
     ]
     pub receiver_associated_info: Account<'info, TokenAccount>,
     #[account(
-        // seeds = [ASSOCIATED_ACCOUNT_SEED],
-        // bump,
         associated_token::mint = mint,
         associated_token::authority = vault,
         mut
