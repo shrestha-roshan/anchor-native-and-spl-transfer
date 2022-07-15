@@ -178,8 +178,9 @@ pub struct WithdrawNative<'info> {
 
 #[derive(Accounts)]
 pub struct InitializeFungibleToken<'info> {
+    /// CHECK: This is not dangerous because we don't read or write from this account
     #[account(
-        init,
+        init_if_needed,
         payer = sender_account,
         space = 8 + 32 + 32 + 32 + 8 + 8,
         seeds = [TOKEN_ESCROW_PDA_SEED, sender_account.key().as_ref()],
@@ -219,7 +220,7 @@ pub struct WithdrawFungibleToken<'info> {
     ]
     pub escrow_account: Account<'info, EscrowFungibleToken>,
     #[account(
-        init,
+        init_if_needed,
         payer = receiver_account,
         associated_token::mint = mint,
         associated_token::authority = receiver_account,
