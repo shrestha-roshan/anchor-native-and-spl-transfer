@@ -1,3 +1,4 @@
 # time-lock-sol-token-anchor
 
-![alt text](https://github.com/shrestha-rosham/time-lock-sol-token-anchor/blob/main/sol_token_tranfser.jpg?raw=true)
+![sol_token_tranfser](https://user-images.githubusercontent.com/76548933/179363299-0e7c2a64-5de0-4990-9f62-b2ed2fe9ed00.jpg)
+
