@@ -139,7 +139,7 @@ pub mod token_withdraw {
 #[derive(Accounts)]
 pub struct InitializeNative<'info> {
     #[account(
-        init, 
+        init_if_needed, 
         payer = sender_account, 
         space = 8 + 32 + 32 + 8 + 8, 
         seeds = [ESCROW_PDA_SEED, sender_account.key().as_ref()], 
@@ -191,7 +191,7 @@ pub struct InitializeFungibleToken<'info> {
     #[account(mut)]
     pub sender_associated_info: Account<'info, TokenAccount>,
     #[account(
-        init,
+        init_if_needed,
         payer = sender_account,
         associated_token::mint = mint,
         associated_token::authority = vault,

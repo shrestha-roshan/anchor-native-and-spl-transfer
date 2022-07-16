@@ -5,9 +5,10 @@ token_withdraw = "3ERnPj1gQnKzagvWCjqZGskJszcLhunXuLfYqjuSvxBW"
 
 [registry]
 url = "https://api.apr.dev"
+# url = "http://localhost:8899"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "/home/rosh/.config/solana/id.json"
 
 [scripts]
